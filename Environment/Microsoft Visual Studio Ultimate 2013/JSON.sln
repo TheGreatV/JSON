@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Console", "Projects\Console\Console.vcxproj", "{68153BD0-01A1-4BD7-BB19-A7B64A4C2CAB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{79AC5C25-EBC1-4A14-A48A-DA4D5EC35368} = {79AC5C25-EBC1-4A14-A48A-DA4D5EC35368}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JSON", "Projects\JSON\JSON.vcxproj", "{79AC5C25-EBC1-4A14-A48A-DA4D5EC35368}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{68153BD0-01A1-4BD7-BB19-A7B64A4C2CAB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{68153BD0-01A1-4BD7-BB19-A7B64A4C2CAB}.Debug|Win32.Build.0 = Debug|Win32
+		{68153BD0-01A1-4BD7-BB19-A7B64A4C2CAB}.Release|Win32.ActiveCfg = Release|Win32
+		{68153BD0-01A1-4BD7-BB19-A7B64A4C2CAB}.Release|Win32.Build.0 = Release|Win32
+		{79AC5C25-EBC1-4A14-A48A-DA4D5EC35368}.Debug|Win32.ActiveCfg = Debug|Win32
+		{79AC5C25-EBC1-4A14-A48A-DA4D5EC35368}.Debug|Win32.Build.0 = Debug|Win32
+		{79AC5C25-EBC1-4A14-A48A-DA4D5EC35368}.Release|Win32.ActiveCfg = Release|Win32
+		{79AC5C25-EBC1-4A14-A48A-DA4D5EC35368}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
