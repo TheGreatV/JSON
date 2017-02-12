@@ -23,65 +23,105 @@ JSON::Object& JSON::Object::Undefined::operator [] (const Size& index_)
 {
 	throw Exception();
 }
-JSON::Object::Undefined::operator JSON::Object::Text() const
-{
-	throw Exception();
-}
+
 JSON::Object::Undefined::operator JSON::Object::Type() const
 {
 	return Type::Undefined;
+}
+
+JSON::Object::Undefined::operator JSON::Null() const
+{
+	throw Exception();
+}
+JSON::Object::Undefined::operator bool() const
+{
+	throw Exception();
+}
+JSON::Object::Undefined::operator std::double_t() const
+{
+	throw Exception();
+}
+JSON::Object::Undefined::operator JSON::String() const
+{
+	throw Exception();
+}
+
+JSON::Object::Text JSON::Object::Undefined::Stringify() const
+{
+	throw Exception();
 }
 
 #pragma endregion
 
 #pragma region Null
 
-JSON::Object::Null::operator JSON::Object::Text() const
-{
-	return "null";
-}
 JSON::Object::Null::operator JSON::Object::Type() const
 {
 	return Type::Null;
 }
+JSON::Object::Null::operator JSON::Null() const
+{
+	return JSON::Null();
+}
+
+JSON::Object::Text JSON::Object::Null::Stringify() const
+{
+	return "null";
+}
+
 
 #pragma endregion
 
 #pragma region Boolean
 
-JSON::Object::Boolean::operator JSON::Object::Text() const
-{
-	return value ? "true" : "false";
-}
 JSON::Object::Boolean::operator JSON::Object::Type() const
 {
 	return Type::Boolean;
+}
+JSON::Object::Boolean::operator bool() const
+{
+	return value;
+}
+
+JSON::Object::Text JSON::Object::Boolean::Stringify() const
+{
+	return value ? "true" : "false";
 }
 
 #pragma endregion
 
 #pragma region Number
 
-JSON::Object::Number::operator JSON::Object::Text() const
-{
-	return std::to_string(value);
-}
 JSON::Object::Number::operator JSON::Object::Type() const
 {
 	return Type::Number;
+}
+JSON::Object::Number::operator std::double_t() const
+{
+	return value;
+}
+
+JSON::Object::Text JSON::Object::Number::Stringify() const
+{
+	return std::to_string(value);
 }
 
 #pragma endregion
 
 #pragma region String
 
-JSON::Object::String::operator JSON::Object::Text() const
-{
-	return static_cast<Text>("\"") + value + static_cast<Text>("\"");
-}
 JSON::Object::String::operator JSON::Object::Type() const
 {
 	return Type::String;
+}
+JSON::Object::String::operator JSON::String() const
+{
+	return value;
+}
+
+JSON::Object::Text JSON::Object::String::Stringify() const
+{
+	return static_cast<Text>("\"") + value + static_cast<Text>("\"");
 }
 
 #pragma endregion
@@ -110,7 +150,7 @@ JSON::Object& JSON::Object::Array::operator [] (const Size& index_)
 		throw Exception();
 	}
 }
-JSON::Object::Array::operator JSON::Object::Text() const
+JSON::Object::Text JSON::Object::Array::Stringify() const
 {
 	Text text = "";
 
@@ -128,7 +168,7 @@ JSON::Object::Array::operator JSON::Object::Text() const
 
 		if(static_cast<Type>(child) != Type::Undefined)
 		{
-			text += static_cast<Text>(child);
+			text += child.Stringify();
 		}
 	}
 
@@ -166,7 +206,7 @@ JSON::Object& JSON::Object::Map::operator [] (const Name& name_)
 	return (*it).second;
 }
 
-JSON::Object::Map::operator JSON::Object::Text() const
+JSON::Object::Text JSON::Object::Map::Stringify() const
 {
 	Text text = "";
 
@@ -184,7 +224,7 @@ JSON::Object::Map::operator JSON::Object::Text() const
 
 		if(static_cast<Type>(child.second) != Type::Undefined)
 		{
-			text += static_cast<Text>("\"") + static_cast<Text>(child.first) + static_cast<Text>("\"") + ":" + static_cast<Text>(child.second);
+			text += static_cast<Text>("\"") + static_cast<Text>(child.first) + static_cast<Text>("\"") + ":" + child.second.Stringify();
 		}
 	}
 
@@ -489,7 +529,7 @@ Object ParseMap(const Object::Text& text_, Size& it_)
 			auto nameObject = ParseString(text_, it_);
 			if(static_cast<Object::Type>(nameObject) != Object::Type::Undefined)
 			{
-				auto name = static_cast<Object::Name>(nameObject).substr(1, static_cast<Object::Name>(nameObject).size() - 2);
+				auto name = static_cast<Object::Name>(nameObject);
 				if(!name.empty())
 				{
 					Skip(text_, it_);

@@ -189,7 +189,7 @@ namespace JSON
 	public:
 		using Name = String;
 		using Text = String;
-		using Index = Size;
+		using Index = int;
 	public:
 		enum class Type
 		{
@@ -244,12 +244,18 @@ namespace JSON
 	public:
 		inline const Object& operator [] (const Name& name_) const;
 		inline Object& operator [] (const Name& name_);
-		inline const Object& operator [] (const Size& index_) const;
-		inline Object& operator [] (const Size& index_);
+		inline const Object& operator [] (const char*const name_) const;
+		inline Object& operator [] (const char*const name_);
+		inline const Object& operator [] (const Index& index_) const;
+		inline Object& operator [] (const Index& index_);
 	public:
 		inline operator Type() const;
-		inline operator Text() const;
-		// TODO: float/int cast
+		inline operator JSON::Null() const;
+		inline operator bool() const;
+		inline operator std::double_t() const;
+		inline operator JSON::String() const;
+	public:
+		inline Text Stringify() const;
 	};
 	class Object::Undefined
 	{
@@ -268,7 +274,12 @@ namespace JSON
 		virtual Object& operator [] (const Size& index_);
 	public:
 		virtual operator Type() const;
-		virtual operator Text() const;
+		virtual operator JSON::Null() const;
+		virtual operator bool() const;
+		virtual operator std::double_t() const;
+		virtual operator JSON::String() const;
+	public:
+		virtual Text Stringify() const;
 	};
 #pragma region Object::Null
 	class Object::Null : public Object::Undefined
@@ -283,7 +294,9 @@ namespace JSON
 		inline Undefined& operator = (Null&&) = delete;
 	public:
 		virtual operator Type() const override;
-		virtual operator Text() const override;
+		virtual operator JSON::Null() const override;
+	public:
+		virtual Text Stringify() const override;
 	};
 #pragma endregion
 #pragma region Object::Boolean
@@ -303,8 +316,10 @@ namespace JSON
 		inline Boolean& operator = (const Boolean&) = delete;
 		inline Boolean& operator = (Boolean&&) = delete;
 	public:
-		virtual operator Type() const;
-		virtual operator Text() const;
+		virtual operator Type() const override;
+		virtual operator bool() const override;
+	public:
+		virtual Text Stringify() const override;
 	};
 #pragma endregion
 #pragma region Object::Number
@@ -325,8 +340,10 @@ namespace JSON
 		inline Number& operator = (const Number&) = delete;
 		inline Number& operator = (Number&&) = delete;
 	public:
-		virtual operator Type() const;
-		virtual operator Text() const;
+		virtual operator Type() const override;
+		virtual operator std::double_t() const override;
+	public:
+		virtual Text Stringify() const override;
 	};
 #pragma endregion
 #pragma region Object::String
@@ -346,8 +363,10 @@ namespace JSON
 		inline String& operator = (const String&) = delete;
 		inline String& operator = (String&&) = delete;
 	public:
-		virtual operator Type() const;
-		virtual operator Text() const;
+		virtual operator Type() const override;
+		virtual operator JSON::String() const override;
+	public:
+		virtual Text Stringify() const override;
 	};
 #pragma endregion
 #pragma region Object::Array
@@ -369,8 +388,9 @@ namespace JSON
 		virtual const Object& operator [] (const Size& index_) const override;
 		virtual Object& operator [] (const Size& index_) override;
 	public:
-		virtual operator Type() const;
-		virtual operator Text() const;
+		virtual operator Type() const override;
+	public:
+		virtual Text Stringify() const override;
 	};
 #pragma endregion
 #pragma region Object::Map
@@ -391,8 +411,9 @@ namespace JSON
 		virtual const Object& operator [] (const Name& name_) const override;
 		virtual Object& operator [] (const Name& name_) override;
 	public:
-		virtual operator Type() const;
-		virtual operator Text() const;
+		virtual operator Type() const override;
+	public:
+		virtual Text Stringify() const override;
 	};
 #pragma endregion
 
@@ -682,11 +703,19 @@ inline JSON::Object& JSON::Object::operator [] (const Name& name_)
 {
 	return object->operator[](name_);
 }
-inline const JSON::Object& JSON::Object::operator [] (const Size& index_) const
+inline const JSON::Object& JSON::Object::operator [] (const char*const name_) const
+{
+	return operator[](static_cast<Name>(name_));
+}
+inline JSON::Object& JSON::Object::operator [] (const char*const name_)
+{
+	return operator[](static_cast<Name>(name_));
+}
+inline const JSON::Object& JSON::Object::operator [] (const Index& index_) const
 {
 	return object->operator[](index_);
 }
-inline JSON::Object& JSON::Object::operator [] (const Size& index_)
+inline JSON::Object& JSON::Object::operator [] (const Index& index_)
 {
 	return object->operator[](index_);
 }
@@ -695,9 +724,26 @@ inline JSON::Object::operator Type() const
 {
 	return object->operator Type();
 }
-inline JSON::Object::operator Text() const
+inline JSON::Object::operator JSON::Null() const
 {
-	return object->operator Text();
+	return object->operator JSON::Null();
+}
+inline JSON::Object::operator bool() const
+{
+	return object->operator bool();
+}
+inline JSON::Object::operator std::double_t() const
+{
+	return object->operator std::double_t();
+}
+inline JSON::Object::operator JSON::String() const
+{
+	return object->operator JSON::String();
+}
+
+inline JSON::Object::Text JSON::Object::Stringify() const
+{
+	return object->Stringify();
 }
 
 #pragma endregion
